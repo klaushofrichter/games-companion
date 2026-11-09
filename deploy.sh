@@ -59,7 +59,9 @@ codesign -f -s "$identity" --entitlements "$DERIVED/entitlements.plist" "$APP"
 rm -rf "$DERIVED/ipa" && mkdir -p "$DERIVED/ipa/Payload"
 cp -R "$APP" "$DERIVED/ipa/Payload/"
 (cd "$DERIVED/ipa" && zip -qr ../GameCompanion.ipa Payload)
-ideviceinstaller $link -u "$UDID" install "$DERIVED/GameCompanion.ipa"
+# Over Wi-Fi the copy sometimes breaks off (AFC write error); one more try usually works.
+ideviceinstaller $link -u "$UDID" install "$DERIVED/GameCompanion.ipa" ||
+    { [ -n "$link" ] && echo "Retrying over Wi-Fi..." && ideviceinstaller $link -u "$UDID" install "$DERIVED/GameCompanion.ipa"; }
 git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null || git tag "v$VERSION"
 echo "Installed version $VERSION${link:+ over Wi-Fi}"
 
