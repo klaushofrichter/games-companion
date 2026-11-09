@@ -50,6 +50,7 @@
         "INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone": "UIInterfaceOrientationPortrait",
         "INFOPLIST_KEY_UIRequiresFullScreen": "YES",
         "INFOPLIST_KEY_CFBundleDisplayName": "Companion",
+        "INFOPLIST_KEY_NSCameraUsageDescription": "Now and then the front camera measures how bright the room is, to dim the screen in the dark. No pictures are taken or kept.",
         "INFOPLIST_KEY_NSLocationWhenInUseUsageDescription": "The table page shows the weather where the table is.",
         "IPHONEOS_DEPLOYMENT_TARGET": "16.0",
         "LD_RUNPATH_SEARCH_PATHS": "@executable_path/Frameworks",

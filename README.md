@@ -3,12 +3,16 @@
 An iPhone app that lies flat on the [Game Table](https://games.skylar.technology) next to the board, as a side
 display. It is optional: the board works the same without it; when the phone is there, it adds to the table.
 
-Runs on an iPhone X (iOS 16), portrait, never dims. Two pages, swiped left and right:
+Runs on an iPhone X (iOS 16), portrait, never dims by itself. Three pages, swiped left and right:
 
 | Page | What it shows |
 | --- | --- |
-| **Games** | The table's games, one after another (every 9 s; tap to move on, tap the left edge to go back): a board screenshot or the game's art, players, what it is and what your phone does in it |
+| **Games** | The table's games, one after another (every 9 s; tap to move on, tap the left edge to go back). Each builds up in steps over a glowing backdrop in its colour: the board screenshot or the game's art (slowly zooming), players, its name and what your phone does in it. One game crossfades into the next |
 | **Table** | Now playing (not connected to the table yet, so "No game running"), the time, a game timer that survives restarts, and the weather where the phone is (Open-Meteo, no key) |
+| **Screensaver** | Muted, slow light that doesn't distract from the board: an aurora, or waves over a colour that changes through the hours. A tap switches |
+
+Every 5 minutes the front camera (facing the ceiling) measures the room's light for about a second; the screen
+brightness follows it, and in a dark room the app dims itself further. No pictures are taken or kept.
 
 The game list is bundled: the platform's built-in games and the five from extra-games are in
 `GameCompanion/Game.swift`, with the board screenshots games.skylar.technology publishes in `GameCompanion/Games/`.
@@ -22,7 +26,7 @@ or `imageRow` with `images` (file names in the folder), or `marbleTrack` with a 
 
 ```
 ./deploy.sh            # build, install and launch on the one reachable iPhone (USB or Wi-Fi)
-./deploy.sh page=table # launch arguments go to the app; page=table opens on the table page
+./deploy.sh page=table # launch arguments go to the app; page=table or page=screensaver opens on that page
 ./deploy.sh --check    # unsigned build only
 ```
 
