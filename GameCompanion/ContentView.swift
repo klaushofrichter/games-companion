@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// The companion's screens, swiped left and right: the games showcase and the
-/// table's status. The board never depends on this phone; it only adds to it.
+/// The companion's screens, swiped left and right: the games showcase, the table's
+/// status and a screensaver; after an hour without a touch, the energy saver.
+/// The board never depends on this phone; it only adds to it.
 struct ContentView: View {
     enum Page: Int, CaseIterable { case games, table, screensaver }
 
@@ -12,8 +13,32 @@ struct ContentView: View {
     }()
     @StateObject private var weather = Weather()
     @StateObject private var light = AmbientLight()
+    @StateObject private var idle = IdleMonitor()
 
     var body: some View {
+        ZStack {
+            if idle.isSaving {
+                EnergySaverView()
+                    .transition(.opacity)
+            } else {
+                pages
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 1.5), value: idle.isSaving)
+        .foregroundColor(.white)
+        .preferredColorScheme(.dark)
+        .statusBarHidden()
+        .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true   // it lies on the table as a display
+            light.start()
+            idle.start()
+        }
+        .onReceive(idle.$isSaving) { light.energySaving = $0 }
+    }
+
+    /// Swiped pages. Not built at all while the energy saver is on, so nothing animates.
+    private var pages: some View {
         GeometryReader { geo in
             // The pages run edge to edge (the showcase's backdrop fills the screen);
             // their content keeps clear of the notch, the home bar and the page dots.
@@ -46,13 +71,6 @@ struct ContentView: View {
                     .animation(.easeInOut(duration: 3), value: light.veil)
             }
             .ignoresSafeArea()
-        }
-        .foregroundColor(.white)
-        .preferredColorScheme(.dark)
-        .statusBarHidden()
-        .onAppear {
-            UIApplication.shared.isIdleTimerDisabled = true   // it lies on the table as a display
-            light.start()
         }
     }
 

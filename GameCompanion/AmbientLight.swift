@@ -23,6 +23,20 @@ final class AmbientLight: ObservableObject {
     private let sampler = Sampler()
     private var timer: Timer?
 
+    /// While the energy saver is on: the lowest screen brightness, and no camera
+    /// samples. Off again: the room's brightness back, from a fresh sample.
+    var energySaving = false {
+        didSet {
+            guard energySaving != oldValue else { return }
+            if energySaving {
+                UIScreen.main.brightness = 0
+            } else {
+                applyBrightness()
+                sample()
+            }
+        }
+    }
+
     func start() {
         guard timer == nil else { return }
         #if DEBUG
@@ -39,6 +53,7 @@ final class AmbientLight: ObservableObject {
     }
 
     private func sample() {
+        guard !energySaving else { return }
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             sampler.measure { [weak self] lux in
@@ -60,6 +75,11 @@ final class AmbientLight: ObservableObject {
         // Ignore small changes so the screen doesn't flicker between samples.
         guard abs(newLevel - level) >= 0.04 else { return }
         level = newLevel
+        applyBrightness()
+    }
+
+    private func applyBrightness() {
+        guard !energySaving, lux != nil else { return }   // never measured: left to iOS
         UIScreen.main.brightness = CGFloat(0.05 + 0.85 * level)
     }
 

@@ -14,6 +14,13 @@ Runs on an iPhone X (iOS 16), portrait, never dims by itself. Three pages, swipe
 Every 5 minutes the front camera (facing the ceiling) measures the room's light for about a second; the screen
 brightness follows it, and in a dark room the app dims itself further. No pictures are taken or kept.
 
+After an hour without a touch the energy saver takes over: only the time, dim on black, moving a little every minute
+so it doesn't burn into the OLED screen. Screen brightness drops to its lowest and the camera stops sampling. The next
+touch brings the pages back. The launch argument `idle=<seconds>` shortens the hour for testing.
+
+The app icon is drawn by `tools/make-icon.swift`:
+`swift tools/make-icon.swift GameCompanion/Assets.xcassets/AppIcon.appiconset/icon.png`.
+
 The game list is bundled: the platform's built-in games and the five from extra-games are in
 `GameCompanion/Game.swift`, with the board screenshots games.skylar.technology publishes in `GameCompanion/Games/`.
 
